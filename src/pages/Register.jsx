@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { AuthContext } from "../contexts/AuthContext";
 import { FaEye } from "react-icons/fa";
@@ -10,23 +10,28 @@ import {
   getWardApiRequest,
 } from "../utils/service";
 
-function uploadPhotoComponent() {
+const Register = () => {
   const [base64String, setBase64String] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
+  const [fileSelected, setFileSelected] = useState(false)
 
-  const handfileChange = (event) => {
+  const handleButtonClick = () => {
+    document.getElementById("fileInput").click();
+  };
+
+  const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result.split(",")[1];
         setBase64String(base64);
-        console.log(base64);
+        setImagePreview(reader.result);
+        setFileSelected(true)
       };
       reader.readAsDataURL(file);
     }
   };
-}
-const Register = () => {
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
@@ -326,6 +331,7 @@ const Register = () => {
                     name="street-address"
                     type="text"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
+                    onChange={(e) => updateRegisterInfo({...registerInfo, address: e.target.value})}
                   />
                 </div>
               </div>
@@ -335,17 +341,21 @@ const Register = () => {
                   htmlFor="ward"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Ward
+                  City
                 </label>
                 <div className="mt-2">
                   <select
-                    name="ward"
-                    id="ward"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
+                    name="city"
+                    id="city"
+                    onChange={handleChangeDistrict}
+                    value={selectedCity}
                   >
-                    <option value="">Select a ward</option>
-                    {wards.map((ward) => (
-                      <option key={ward.id} value={ward.id}>Phường {ward.name}</option>
+                    <option value="">Select a city</option>
+                    {cities.map((city) => (
+                      <option key={city.id} value={city.id}>
+                        {city.name}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -381,20 +391,18 @@ const Register = () => {
                   htmlFor="city"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  City
+                  Ward/Village
                 </label>
                 <div className="mt-2">
                   <select
+                    name="ward"
+                    id="ward"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
-                    name="city"
-                    id="city"
-                    onChange={handleChangeDistrict}
-                    value={selectedCity}
                   >
-                    <option value="">Select a city</option>
-                    {cities.map((city) => (
-                      <option key={city.id} value={city.id}>
-                        {city.name}
+                    <option value="">Select a ward/village</option>
+                    {wards.map((ward) => (
+                      <option key={ward.id} value={ward.id}>
+                        {ward.name}
                       </option>
                     ))}
                   </select>
@@ -409,21 +417,28 @@ const Register = () => {
                   Photo
                 </label>
                 <div className="mt-2 flex items-center gap-x-3">
-                  <UserCircleIcon
-                    aria-hidden="true"
-                    className="h-12 w-12 text-gray-300"
-                  />
+                  {imagePreview ? (
+                    <img src={imagePreview} alt="pic user" className="w-52" />
+                  ) : (
+                    <UserCircleIcon
+                      aria-hidden="true"
+                      className="h-12 w-12 text-gray-300"
+                    />
+                  )}
+
                   <button
                     type="button"
                     className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                    onClick={handleButtonClick}
                   >
-                    Upload
+                    {fileSelected ? "Change" : "Upload"}
                   </button>
                   <input
                     id="fileInput"
                     type="file"
                     accept=".png, .jpg, .jpeg, .gif"
                     className="hidden"
+                    onChange={handleFileChange}
                   />
                   <p className="text-xs leading-5 text-gray-600">
                     PNG, JPG, GIF up to 10MB

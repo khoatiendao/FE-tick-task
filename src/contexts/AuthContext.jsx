@@ -2,7 +2,6 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import { baseUrlUser, postRequest } from "../utils/service";
 import { Bounce, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate, useRoutes } from "react-router-dom";
 
 
 
@@ -47,6 +46,9 @@ export const AuthContextProvider = ({children}) => {
         phone: "",
         country: "",
         address: "",
+        ward: "",
+        district: "",
+        city: "",
         photo: ""
     })
 
