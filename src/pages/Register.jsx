@@ -3,7 +3,12 @@ import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { AuthContext } from "../contexts/AuthContext";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
-import { getCountryApiRequest } from "../utils/service";
+import {
+  getCityApiRequest,
+  getCountryApiRequest,
+  getDistrictApiRequest,
+  getWardApiRequest,
+} from "../utils/service";
 
 function uploadPhotoComponent() {
   const [base64String, setBase64String] = useState("");
@@ -33,6 +38,53 @@ const Register = () => {
     fetchCountries();
   }, []);
 
+  const [cities, setCities] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      const name = await getCityApiRequest();
+      setCities(name);
+    };
+
+    fetchCities();
+  }, []);
+
+  const handleChangeDistrict = async (e) => {
+    const cityId = e.target.value;
+    setSelectedCity(cityId);
+    if (cityId) {
+      const fetchDistrict = async () => {
+        const name = await getDistrictApiRequest(cityId);
+        if (name) {
+          setDistricts(name);
+        }
+      };
+      fetchDistrict();
+    } else {
+      setDistricts([]);
+    }
+  };
+
+  const handleChangeWard = async (e) => {
+    const districtId = e.target.value;
+    setSelectedDistrict(districtId);
+    if (districtId) {
+      const fetchWard = async () => {
+        const name = await getWardApiRequest(districtId);
+        if (name) {
+          setWards(name);
+        }
+      };
+      fetchWard();
+    } else {
+      setWards([]);
+    }
+  };
+
   const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = () => {
@@ -49,7 +101,11 @@ const Register = () => {
     useContext(AuthContext);
   return (
     <>
-      <form onSubmit={registerUser} method="POST" className="flex justify-center items-center">
+      <form
+        onSubmit={registerUser}
+        method="POST"
+        className="flex justify-center items-center"
+      >
         <div className="space-y-12 w-[50vw] p-14">
           <div className="pb-12 border-b border-gray-900/10">
             <h2 className="text-3xl font-semibold leading-7 text-gray-900 text-center">
@@ -84,7 +140,12 @@ const Register = () => {
                         name="username"
                         type="text"
                         placeholder="janesmith"
-                        onChange={(e) => updateRegisterInfo({...registerInfo, name: e.target.value})}
+                        onChange={(e) =>
+                          updateRegisterInfo({
+                            ...registerInfo,
+                            name: e.target.value,
+                          })
+                        }
                         className="flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 pl-3"
                       />
                     </div>
@@ -94,7 +155,12 @@ const Register = () => {
                     <select
                       id="gender"
                       name="gender"
-                      onChange={(e) => updateRegisterInfo({...registerInfo, gender: e.target.value})}
+                      onChange={(e) =>
+                        updateRegisterInfo({
+                          ...registerInfo,
+                          gender: e.target.value,
+                        })
+                      }
                       className="w-28 rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-9 pl-2"
                     >
                       <option>Female</option>
@@ -120,7 +186,12 @@ const Register = () => {
                     id="email"
                     name="email"
                     type="email"
-                    onChange={(e) => updateRegisterInfo({...registerInfo, email: e.target.value})}
+                    onChange={(e) =>
+                      updateRegisterInfo({
+                        ...registerInfo,
+                        email: e.target.value,
+                      })
+                    }
                     required
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
                   />
@@ -140,7 +211,12 @@ const Register = () => {
                       id="password"
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      onChange={(e) => updateRegisterInfo({...registerInfo, password: e.target.value})}
+                      onChange={(e) =>
+                        updateRegisterInfo({
+                          ...registerInfo,
+                          password: e.target.value,
+                        })
+                      }
                       required
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
                     />
@@ -197,7 +273,12 @@ const Register = () => {
                     name="phone"
                     type="tel"
                     pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                    onChange={(e) => updateRegisterInfo({...registerInfo, phone: e.target.value})}
+                    onChange={(e) =>
+                      updateRegisterInfo({
+                        ...registerInfo,
+                        phone: e.target.value,
+                      })
+                    }
                     required
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
                   />
@@ -216,7 +297,12 @@ const Register = () => {
                     id="country"
                     name="country"
                     value={registerInfo.country}
-                    onChange={(e) => updateRegisterInfo({...registerInfo, country: e.target.value})}
+                    onChange={(e) =>
+                      updateRegisterInfo({
+                        ...registerInfo,
+                        country: e.target.value,
+                      })
+                    }
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 pl-2"
                   >
                     <option value="">Select a country</option>
@@ -252,12 +338,16 @@ const Register = () => {
                   Ward
                 </label>
                 <div className="mt-2">
-                  <input
-                    id="ward"
+                  <select
                     name="ward"
-                    type="text"
+                    id="ward"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
-                  />
+                  >
+                    <option value="">Select a ward</option>
+                    {wards.map((ward) => (
+                      <option key={ward.id} value={ward.id}>Phường {ward.name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -269,12 +359,20 @@ const Register = () => {
                   District
                 </label>
                 <div className="mt-2">
-                  <input
-                    id="district"
-                    name="district"
-                    type="text"
+                  <select
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
-                  />
+                    name="district"
+                    id="district"
+                    onChange={handleChangeWard}
+                    value={selectedDistrict}
+                  >
+                    <option value="">Select a district</option>
+                    {districts.map((district) => (
+                      <option key={district.id} value={district.id}>
+                        {district.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -286,12 +384,20 @@ const Register = () => {
                   City
                 </label>
                 <div className="mt-2">
-                  <input
-                    id="city"
-                    name="city"
-                    type="text"
+                  <select
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
-                  />
+                    name="city"
+                    id="city"
+                    onChange={handleChangeDistrict}
+                    value={selectedCity}
+                  >
+                    <option value="">Select a city</option>
+                    {cities.map((city) => (
+                      <option key={city.id} value={city.id}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 

@@ -65,3 +65,62 @@ export const getCountryApiRequest = async () => {
     return null;
   }
 };
+
+export const getCityApiRequest = async () => {
+  try {
+    const response = await fetch(
+      'https://esgoo.net/api-tinhthanh/1/0.htm'
+    );
+    const cities = await response.json();
+    if (cities && cities.data) {
+      const citiesOptions = cities.data.map((city) => ({
+        id: city.id,
+        name: city.full_name,
+      }));
+      return citiesOptions;
+    } else {
+      console.error('Error fetching data city');
+    }
+  } catch (error) {
+    console.error('Error fetching city:', error);
+    return null;
+  }
+};
+
+export const getDistrictApiRequest = async(cityId) => {
+  try {
+    const response = await fetch(`https://esgoo.net/api-tinhthanh/2/${cityId}.htm`)
+    const districts = await response.json()
+    if(districts && districts.data) {
+      const districtsOptions = districts.data.map((district) => ({
+        id: district.id,
+        name: district.full_name
+      }))
+      return districtsOptions
+    } else {
+      console.error('Error fetching data district');
+    }
+  } catch (error) {
+    console.error('Error fetching district:', error);
+    return null;
+  }
+}
+
+export const getWardApiRequest = async(districtId) => {
+  try {
+    const response = await fetch(`https://esgoo.net/api-tinhthanh/3/${districtId}.htm`)
+    const wards = await response.json()
+    if(wards && wards.data) {
+      const wardsOptions = wards.data.map((ward) => ({
+        id: ward.id,
+        name: ward.name
+      }))
+      return wardsOptions
+    } else {
+      console.error('Error fetching data ward');
+    }
+  } catch (error) {
+    console.error('Error fetching ward:', error);
+    return null;
+  }
+}
