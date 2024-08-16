@@ -9,11 +9,11 @@ import {
   getDistrictApiRequest,
   getWardApiRequest,
 } from "../utils/service";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const Register = () => {
-  const [base64String, setBase64String] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
-  const [fileSelected, setFileSelected] = useState(false)
+  const [fileSelected, setFileSelected] = useState(false);
 
   const handleButtonClick = () => {
     document.getElementById("fileInput").click();
@@ -25,9 +25,9 @@ const Register = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result.split(",")[1];
-        setBase64String(base64);
+        updateRegisterInfo({ ...registerInfo, photo: base64 });
         setImagePreview(reader.result);
-        setFileSelected(true)
+        setFileSelected(true);
       };
       reader.readAsDataURL(file);
     }
@@ -58,8 +58,9 @@ const Register = () => {
     fetchCities();
   }, []);
 
-  const handleChangeDistrict = async (e) => {
+  const handleChangeCity = async (e) => {
     const cityId = e.target.value;
+    const cityName = e.target.options[e.target.selectedIndex].text;
     setSelectedCity(cityId);
     if (cityId) {
       const fetchDistrict = async () => {
@@ -69,13 +70,15 @@ const Register = () => {
         }
       };
       fetchDistrict();
+      updateRegisterInfo({ ...registerInfo, city: cityName });
     } else {
       setDistricts([]);
     }
   };
 
-  const handleChangeWard = async (e) => {
+  const handleChangeDistrict = async (e) => {
     const districtId = e.target.value;
+    const districtName = e.target.options[e.target.selectedIndex].text;
     setSelectedDistrict(districtId);
     if (districtId) {
       const fetchWard = async () => {
@@ -85,6 +88,7 @@ const Register = () => {
         }
       };
       fetchWard();
+      updateRegisterInfo({ ...registerInfo, district: districtName });
     } else {
       setWards([]);
     }
@@ -104,6 +108,7 @@ const Register = () => {
 
   const { registerInfo, updateRegisterInfo, registerUser, isRegisterLoading } =
     useContext(AuthContext);
+
   return (
     <>
       <form
@@ -141,8 +146,8 @@ const Register = () => {
                   <div className="mt-2 w-full">
                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                       <input
-                        id="username"
-                        name="username"
+                        id="name"
+                        name="name"
                         type="text"
                         placeholder="janesmith"
                         onChange={(e) =>
@@ -277,7 +282,7 @@ const Register = () => {
                     id="phone"
                     name="phone"
                     type="tel"
-                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                    pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
                     onChange={(e) =>
                       updateRegisterInfo({
                         ...registerInfo,
@@ -331,7 +336,12 @@ const Register = () => {
                     name="street-address"
                     type="text"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
-                    onChange={(e) => updateRegisterInfo({...registerInfo, address: e.target.value})}
+                    onChange={(e) =>
+                      updateRegisterInfo({
+                        ...registerInfo,
+                        address: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -348,7 +358,7 @@ const Register = () => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
                     name="city"
                     id="city"
-                    onChange={handleChangeDistrict}
+                    onChange={handleChangeCity}
                     value={selectedCity}
                   >
                     <option value="">Select a city</option>
@@ -373,7 +383,7 @@ const Register = () => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
                     name="district"
                     id="district"
-                    onChange={handleChangeWard}
+                    onChange={handleChangeDistrict}
                     value={selectedDistrict}
                   >
                     <option value="">Select a district</option>
@@ -398,12 +408,16 @@ const Register = () => {
                     name="ward"
                     id="ward"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3"
+                    onChange={(e) =>
+                      updateRegisterInfo({
+                        ...registerInfo,
+                        ward: e.target.value,
+                      })
+                    }
                   >
                     <option value="">Select a ward/village</option>
                     {wards.map((ward) => (
-                      <option key={ward.id} value={ward.id}>
-                        {ward.name}
-                      </option>
+                      <option key={ward.id}>{ward.name}</option>
                     ))}
                   </select>
                 </div>
