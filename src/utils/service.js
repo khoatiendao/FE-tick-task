@@ -3,8 +3,7 @@ export const baseUrlDepartment = 'http://localhost:8443/api/v1/department';
 export const baseUrlBoard = 'http://localhost:8443/api/v1/board';
 export const baseUrlBoardList = 'http://localhost:8443/api/v1/boardList';
 export const baseUrlTaskList = 'http://localhost:8443/api/v1/taskList';
-export const baseUrlTaskAssignment =
-  'http://localhost:8443/api/v1/taskAssignment';
+export const baseUrlTaskAssignment ='http://localhost:8443/api/v1/taskAssignment';
 export const baseUrlPosition = 'http://localhost:8443/api/v1/position';
 export const baseUrlMember = 'http://localhost:8443/api/v1/member';
 

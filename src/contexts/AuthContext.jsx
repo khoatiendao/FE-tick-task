@@ -135,6 +135,8 @@ export const AuthContextProvider = ({ children }) => {
     setUser(null);
   });
 
+  
+
   return (
     <AuthContext.Provider
       value={{

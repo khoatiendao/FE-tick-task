@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Homepage from "./pages/homepage";
 import { AuthContext } from "./contexts/AuthContext";
 import Register from "./pages/Register";
+import Captcha from "./pages/vertification/Captcha";
 
 
 export const App = () => {
@@ -15,6 +16,7 @@ export const App = () => {
         <Routes>
           <Route path="/" element={user ? <Navigate to="/homepage"/> : <Login/>} />
           <Route path="/register" element={<Register/>} />
+          <Route path="/verify/:tokenEmail" element={<Captcha/>}/>
           <Route path="/login" element={user ? <Navigate to="/homepage"/> : <Login/>} />
           <Route path="/homepage" element={<Homepage/>}/>
         </Routes>
