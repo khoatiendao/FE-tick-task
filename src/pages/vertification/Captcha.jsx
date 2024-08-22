@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { baseUrlUser } from "../../utils/service";
+import { baseUrlUser, postRequest } from "../../utils/service";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const Captcha = () => {
@@ -34,13 +34,11 @@ const Captcha = () => {
       const result = await response.json();
       
       if (result.success) {
-        alert("Verification successful. Redirecting to login...");
         navigate("/login");
       } else {
         setVertificationError("Vertification failed. Please try again");
       }
     } catch (error) {
-      console.log(error);
       setVertificationError("An error occurred. Please try again.");
     }
   };
