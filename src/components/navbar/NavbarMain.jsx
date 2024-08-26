@@ -23,7 +23,7 @@ function classNames(...classes) {
 
 const NavbarMain = () => {
   return (
-    <Disclosure as="nav" className="bg-silver">
+    <Disclosure as="nav" className=" bg-silver">
       <div className="mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -98,16 +98,16 @@ const NavbarMain = () => {
               >
                 <MenuItem>
                   <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                    href="/profile"
+                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray"
                   >
-                    Your Profile
+                    Manage Profile
                   </a>
                 </MenuItem>
                 <MenuItem>
                   <a
                     href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray"
                   >
                     Settings
                   </a>
@@ -115,7 +115,7 @@ const NavbarMain = () => {
                 <MenuItem>
                   <a
                     href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray"
                   >
                     Sign out
                   </a>

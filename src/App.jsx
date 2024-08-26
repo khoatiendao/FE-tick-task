@@ -9,6 +9,7 @@ import Captcha from "./pages/vertification/Captcha";
 import { Container } from "@mui/material";
 import NavbarMain from "./components/navbar/NavbarMain";
 import SideBarMain from "./components/navbar/SideBarMain";
+import Profile from "./pages/profile";
 
 export const App = () => {
   const { user } = useContext(AuthContext);
@@ -18,26 +19,26 @@ export const App = () => {
     location.pathname !== "/login" &&
     location.pathname !== "/register" &&
     location.pathname !== "/verify/:tokenEmail" &&
-    location.pathname !== "/";
+    location.pathname !== "/"
 
   const showSideBar = location.pathname !== "/login" &&
     location.pathname !== "/register" &&
     location.pathname !== "/verify/:tokenEmail" &&
-    location.pathname !== "/";
+    location.pathname !== "/" &&
+    location.pathname !== "/profile"
   return (
     <div>
       <ToastContainer />
       {showNavbar && <NavbarMain />}
       {showSideBar && <SideBarMain/>}
-      <Container>
-        <Routes>
-          <Route path="/" element={user ? <Navigate to="/homepage" /> : <Login />}/>
-          <Route path="/register" element={<Register />} />
-          <Route path="/verify/:tokenEmail" element={<Captcha />} />
-          <Route path="/login" element={user ? <Navigate to="/homepage" /> : <Login />}/>
-          <Route path="/homepage" element={user ? <Homepage /> : <Navigate to="/login" />}/>
-        </Routes>
-      </Container>
+      <Routes>
+        <Route path="/" element={user ? <Navigate to="/homepage" /> : <Login />}/>
+        <Route path="/register" element={<Register />} />
+        <Route path="/verify/:tokenEmail" element={<Captcha />} />
+        <Route path="/login" element={user ? <Navigate to="/homepage" /> : <Login />}/>
+        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/homepage" element={user ? <Homepage /> : <Navigate to="/login" />}/>
+      </Routes>
     </div>
   );
 };
