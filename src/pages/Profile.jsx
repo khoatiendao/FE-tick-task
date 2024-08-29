@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Field, Label, Switch } from "@headlessui/react";
 import Avatar from "../components/avatar/Avatar";
-import Tabs from "../components/tabs/Tabs";
+import TabsMain from "../components/tabs/TabsMain";
 
 const Profile = () => {
   const [agreed, setAgreed] = useState(false);
@@ -16,7 +15,7 @@ const Profile = () => {
         </div>
       </div>
       <div className="pl-16 pr-14">
-        <Tabs />
+        <TabsMain />
       </div>
       <div className="isolate bg-white px-6 py-24 sm:py-14 lg:px-8">
         <div
@@ -37,29 +36,31 @@ const Profile = () => {
           className="mx-auto mt-16 max-w-xl sm:mt-10"
         >
           <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-            <div className="flex w-full sm:col-span-2">
-              <label htmlFor="name" className="block text-sm font-semibold leading-6">
+            <div className="sm:col-span-2">
+              <label htmlFor="name" className="text-sm font-semibold leading-6">
                 Name
               </label>
-              <div className="mt-2.5">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-              <div className="mt-2 ml-2 w-28">
-                <select
-                  id="gender"
-                  name="gender"
-                  className="w-24 rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-9 pl-2"
-                >
-                  <option hidden>Gender</option>
-                  <option>Female</option>
-                  <option>Male</option>
-                  <option>Others</option>
-                </select>
+              <div className="flex justify-between">
+                <div className="mt-2.5 w-full">
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                </div>
+                <div className="mt-2.5 ml-2 w-28">
+                  <select
+                    id="gender"
+                    name="gender"
+                    className="h-10 rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-9 pl-2"
+                  >
+                    <option hidden>Gender</option>
+                    <option>Female</option>
+                    <option>Male</option>
+                    <option>Others</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div className="sm:col-span-2">
