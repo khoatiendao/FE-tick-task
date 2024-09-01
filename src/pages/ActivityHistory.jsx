@@ -1,6 +1,7 @@
 import React from 'react'
 
-const ActivityHistory = () => {
+const ActivityHistory = (props) => {
+  const {index} = props
   return (
     <div>ActivityHistory</div>
   )

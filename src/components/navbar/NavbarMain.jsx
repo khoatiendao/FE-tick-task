@@ -98,7 +98,7 @@ const NavbarMain = () => {
               >
                 <MenuItem>
                   <a
-                    href="/profile"
+                    href="/manage-profile"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray"
                   >
                     Manage Profile

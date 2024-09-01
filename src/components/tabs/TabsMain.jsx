@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import ActivityHistory from "../../pages/ActivityHistory";
+import ProfileComponent from "../user/profileComponent";
+import Setting from "../../pages/Setting";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -36,35 +39,50 @@ function a11yProps(index) {
 
 const TabsMain = () => {
   const [value, setValue] = React.useState(0);
+  const { pathname } = useLocation();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  
+  useEffect(() => {
+    const isMatch = tabs.findIndex((item) => item.href === pathname);
+    setValue(isMatch);
+  }, [handleChange]);
+
+  const tabs = [
+    { label: "User Profile", href: "/manage-profile/profile" },
+    { label: "Activity History", href: "/manage-profile/activity-history" },
+    { label: "Setting", href: "/manage-profile/setting" },
+  ];
+
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
-          <Tab label="User Profile" href="/profile" {...a11yProps(0)} />
-          <Tab label="Activity History" href="/activity" {...a11yProps(1)} />
-          <Tab label="Setting" href="/setting" {...a11yProps(2)} />
+        <Tabs value={value} onChange={handleChange}>
+          {tabs.map((tab, index) => (
+            <Tab
+              label={tab.label}
+              {...a11yProps(index)}
+              key={index}
+              onClick={() => navigate(tab.href)}
+            />
+          ))}
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0}>
+      {/* <CustomTabPanel value={value} index={0}>
+        <ProfileComponent />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <ActivityHistory/>
+        <ActivityHistory />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-      </CustomTabPanel>
+        <Setting />
+      </CustomTabPanel> */}
     </Box>
   );
 };
 
 export default TabsMain;
-
-

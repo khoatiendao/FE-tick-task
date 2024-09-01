@@ -1,9 +1,19 @@
-import React from 'react'
+import React from "react";
+import NavbarMain from "../components/navbar/NavbarMain";
+import SideBarMain from "../components/navbar/SideBarMain";
+import Schedule from "./Schedule";
 
 const Homepage = () => {
   return (
-    <div></div>
-  )
-}
+    <div>
+      <NavbarMain />
+      <div className="flex">
+      <SideBarMain />
+        <Schedule />
+        fsdjaklfjasdklfjasdklfjasdklj
+      </div>
+    </div>
+  );
+};
 
-export default Homepage
+export default Homepage;
