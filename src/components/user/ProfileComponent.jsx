@@ -1,10 +1,74 @@
 import { Field } from "@headlessui/react";
 import { Switch } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getCityApiRequest, getCountryApiRequest, getDistrictApiRequest, getWardApiRequest } from "../../utils/service";
 
 const ProfileComponent = () => {
   const [agreed, setAgreed] = useState(false);
   const [isUpdate, setIsUpdate] = useState(true);
+
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      const name = await getCountryApiRequest();
+
+      setCountries(name); // Lưu tên quốc gia vào state nếu cần
+    };
+
+    fetchCountries();
+  }, []);
+
+  const [cities, setCities] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      const name = await getCityApiRequest();
+      setCities(name);
+    };
+
+    fetchCities();
+  }, []);
+
+  const handleChangeCity = async (e) => {
+    const cityId = e.target.value;
+    const cityName = e.target.options[e.target.selectedIndex].text;
+    setSelectedCity(cityId);
+    if (cityId) {
+      const fetchDistrict = async () => {
+        const name = await getDistrictApiRequest(cityId);
+        if (name) {
+          setDistricts(name);
+        }
+      };
+      fetchDistrict();
+
+    } else {
+      setDistricts([]);
+    }
+  };
+
+  const handleChangeDistrict = async (e) => {
+    const districtId = e.target.value;
+    const districtName = e.target.options[e.target.selectedIndex].text;
+    setSelectedDistrict(districtId);
+    if (districtId) {
+      const fetchWard = async () => {
+        const name = await getWardApiRequest(districtId);
+        if (name) {
+          setWards(name);
+        }
+      };
+      fetchWard();
+
+    } else {
+      setWards([]);
+    }
+  };
 
   return (
     <div className="isolate bg-white px-6 py-24 sm:py-14 lg:px-8">
@@ -57,46 +121,10 @@ const ProfileComponent = () => {
           </div>
           <div className="sm:col-span-2">
             <label
-              htmlFor="email"
-              className="block text-sm font-semibold leading-6 text-gray-900"
-            >
-              Email
-            </label>
-            <div className="mt-2.5">
-              <input
-                readOnly={isUpdate}
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-          <div className="sm:col-span-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-semibold leading-6 text-gray-900"
-            >
-              Password
-            </label>
-            <div className="mt-2.5">
-              <input
-                readOnly={isUpdate}
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="email"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-          <div className="sm:col-span-2">
-            <label
               htmlFor="phone-number"
               className="block text-sm font-semibold leading-6 text-gray-900"
             >
-              Phone number
+              Phone
             </label>
             <div className="mt-2.5">
               <input
@@ -104,6 +132,7 @@ const ProfileComponent = () => {
                 id="phone-number"
                 name="phone-number"
                 type="tel"
+                pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
                 autoComplete="tel"
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -111,22 +140,126 @@ const ProfileComponent = () => {
           </div>
           <div className="sm:col-span-2">
             <label
-              htmlFor="message"
+              htmlFor="country"
               className="block text-sm font-semibold leading-6 text-gray-900"
             >
-              Message
+              Country
             </label>
             <div className="mt-2.5">
-              <textarea
-                readOnly={isUpdate}
-                id="message"
-                name="message"
+              <select
+                disabled={isUpdate}
+                id="country"
+                name="country"
                 rows={4}
+                className="block w-full rounded-md border-0 px-2 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              >
+                <option value="">Country</option>
+                {countries.map((country) => (
+                  <option key={country.name}>{country.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="sm:col-span-2">
+            <label
+              htmlFor="address"
+              className="block text-sm font-semibold leading-6 text-gray-900"
+            >
+              Address
+            </label>
+            <div className="mt-2.5">
+              <input
+                readOnly={isUpdate}
+                id="address"
+                name="address"
+                type="text"
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                defaultValue={""}
               />
             </div>
           </div>
+
+          <div className="sm:col-span-2">
+            <div className="flex">
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="city"
+                  className="block text-sm font-semibold leading-6 text-gray-900"
+                >
+                  City
+                </label>
+                <div className="mt-2.5">
+                  <select
+                    disabled={isUpdate}
+                    id="city"
+                    name="city"
+                    onChange={handleChangeCity}
+                    value={selectedCity}
+                    rows={4}
+                    className="block w-full rounded-md border-0 px-2 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  >
+                    <option value="">City</option>
+                    {cities.map((city) => (
+                      <option key={city.id} value={city.id}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="district"
+                  className="block text-sm font-semibold leading-6 text-gray-900"
+                >
+                  District
+                </label>
+                <div className="mt-2.5 w-48">
+                  <select
+                    disabled={isUpdate}
+                    id="district"
+                    name="district"
+                    onChange={handleChangeDistrict}
+                    value={selectedDistrict}
+                    // rows={4}
+                    className="block w-full rounded-md border-0 px-2 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  >
+                    <option value="">District</option>
+                    {districts.map((district) => (
+                      <option key={district.id} value={district.id}>
+                        {district.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="ward"
+                  className="block text-sm font-semibold leading-6 text-gray-900"
+                >
+                  Ward
+                </label>
+                <div className="mt-2.5 w-48">
+                  <select
+                    disabled={isUpdate}
+                    id="ward"
+                    name="ward"
+                    rows={4}
+                    className="block w-full rounded-md border-0 px-2 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  >
+                    <option value="">Ward</option>
+                    {wards.map((ward) => (
+                      <option key={ward.id}>{ward.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <Field className="flex gap-x-4 sm:col-span-2">
             <div className="flex h-6 items-center">
               <Switch
@@ -145,11 +278,10 @@ const ProfileComponent = () => {
               </Switch>
             </div>
             <label className="text-sm leading-6 text-gray-600">
-              By selecting this, you agree to our{" "}
+              Click button if you want to update profile{" "}
               <a href="#" className="font-semibold text-indigo-600">
                 privacy&nbsp;policy
               </a>
-              .
             </label>
           </Field>
         </div>

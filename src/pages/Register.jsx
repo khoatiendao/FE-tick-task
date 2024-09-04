@@ -399,7 +399,7 @@ const Register = () => {
 
               <div className="sm:col-span-2">
                 <label
-                  htmlFor="city"
+                  htmlFor="ward"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
                   Ward/Village
