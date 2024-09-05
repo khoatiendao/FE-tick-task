@@ -1,8 +1,11 @@
 import { createContext, useCallback, useEffect, useState } from "react";
-import { baseUrlUser, postRequest } from "../utils/service";
+import { baseUrlUser, getRequest, postRequest } from "../utils/service";
 import { Bounce, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
+
 
 const success = (message) => {
   toast.success(message, {
@@ -57,6 +60,53 @@ export const AuthContextProvider = ({ children }) => {
     email: "",
     password: "",
   });
+
+  const getUserIdFromToken = () => {
+    const token = localStorage.getItem('token')
+    if(!token) return null;
+    
+    const decodedToken = jwtDecode(token)
+    console.log(decodedToken);
+    return decodedToken._id
+  }
+
+  const [userData, setUserData] = useState({
+    name: "",
+    gender: "",
+    phone: "",
+    country: "",
+    address: "",
+    city: "",
+    district: "",
+    ward: ""
+  })
+
+  useEffect(() => {
+    const fetchData = async() => {
+      const _id = getUserIdFromToken();
+      const response = await getRequest(`${baseUrlUser}/${_id}`)
+      console.log();
+      
+
+      if(response.error) {
+        failed('Get user profile failed')
+      }
+
+      const data = await response.json()
+      setUserData({
+        name: data.name,
+        gender: data.gender,
+        phone: data.phone,
+        country: data.country,
+        address: data.address,
+        city: data.city,
+        district: data.district,
+        ward: data.ward
+      })
+      success('Get user profile success')
+      fetchData()
+    }
+  },[])
 
   const navigate = useNavigate();
 
@@ -135,8 +185,6 @@ export const AuthContextProvider = ({ children }) => {
     setUser(null);
   });
 
-  
-
   return (
     <AuthContext.Provider
       value={{
@@ -152,6 +200,8 @@ export const AuthContextProvider = ({ children }) => {
         loginError,
         updateLoginInfo,
         isLoginLoading,
+        userData,
+        setUserData
       }}
     >
       {children}

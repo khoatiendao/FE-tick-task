@@ -1,7 +1,8 @@
 import { Field } from "@headlessui/react";
 import { Switch } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getCityApiRequest, getCountryApiRequest, getDistrictApiRequest, getWardApiRequest } from "../../utils/service";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const ProfileComponent = () => {
   const [agreed, setAgreed] = useState(false);
@@ -70,6 +71,17 @@ const ProfileComponent = () => {
     }
   };
 
+  const {userData, setUserData} = useContext(AuthContext)
+
+  const handleChangeProfile = (e) => {
+    const {name, value} = e.target
+
+    setUserData({
+      ...userData,
+      [name]: value
+    })
+  }
+
   return (
     <div className="isolate bg-white px-6 py-24 sm:py-14 lg:px-8">
       <div
@@ -101,6 +113,8 @@ const ProfileComponent = () => {
                   id="name"
                   name="name"
                   type="text"
+                  value={userData.name}
+                  onChange={handleChangeProfile}
                   className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>

@@ -7,6 +7,7 @@ export const baseUrlTaskAssignment ='http://localhost:8443/api/v1/taskAssignment
 export const baseUrlPosition = 'http://localhost:8443/api/v1/position';
 export const baseUrlMember = 'http://localhost:8443/api/v1/member';
 
+
 export const postRequest = async (url, body) => {
   const response = await fetch(url, {
     method: 'POST',
@@ -123,3 +124,5 @@ export const getWardApiRequest = async(districtId) => {
     return null;
   }
 }
+
+
