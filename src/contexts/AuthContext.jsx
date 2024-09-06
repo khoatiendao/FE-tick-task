@@ -85,7 +85,7 @@ export const AuthContextProvider = ({ children }) => {
     const fetchData = async() => {
       const _id = getUserIdFromToken();
       const response = await getRequest(`${baseUrlUser}/${_id}`)
-      console.log();
+      console.log(response);
       
 
       if(response.error) {
@@ -199,9 +199,7 @@ export const AuthContextProvider = ({ children }) => {
         loginInfo,
         loginError,
         updateLoginInfo,
-        isLoginLoading,
-        userData,
-        setUserData
+        isLoginLoading
       }}
     >
       {children}

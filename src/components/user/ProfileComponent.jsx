@@ -1,8 +1,15 @@
 import { Field } from "@headlessui/react";
 import { Switch } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { getCityApiRequest, getCountryApiRequest, getDistrictApiRequest, getWardApiRequest } from "../../utils/service";
-import { AuthContext } from "../../contexts/AuthContext";
+import {
+  baseUrlUser,
+  getCityApiRequest,
+  getCountryApiRequest,
+  getDistrictApiRequest,
+  getRequest,
+  getWardApiRequest,
+} from "../../utils/service";
+import { jwtDecode } from "jwt-decode";
 
 const ProfileComponent = () => {
   const [agreed, setAgreed] = useState(false);
@@ -47,7 +54,6 @@ const ProfileComponent = () => {
         }
       };
       fetchDistrict();
-
     } else {
       setDistricts([]);
     }
@@ -65,22 +71,57 @@ const ProfileComponent = () => {
         }
       };
       fetchWard();
-
     } else {
       setWards([]);
     }
   };
 
-  const {userData, setUserData} = useContext(AuthContext)
-
-  const handleChangeProfile = (e) => {
-    const {name, value} = e.target
-
-    setUserData({
-      ...userData,
-      [name]: value
-    })
+  const getUserIdFromToken = () => {
+    const token = localStorage.getItem('token')
+    if(!token) return null;
+    
+    const decodedToken = jwtDecode(token)
+    console.log(decodedToken);
+    return decodedToken._id
   }
+
+  const [userData, setUserData] = useState({
+    name: "",
+    gender: "",
+    phone: "",
+    country: "",
+    address: "",
+    city: "",
+    district: "",
+    ward: ""
+  })
+
+  useEffect(() => {
+    const fetchData = async() => {
+      const _id = getUserIdFromToken();
+      console.log(_id);
+      
+      const response = await getRequest(`${baseUrlUser}/${_id}`)
+      console.log(response);
+      
+      
+      if(!response.ok) {
+        throw new Error('Error fetching user data')
+      }
+
+      setUserData({
+        name: response.user.name,
+        gender: response.user.gender,
+        phone: response.user.phone,
+        country: response.user.country,
+        address: response.user.address,
+        city: response.user.city,
+        district: response.user.district,
+        ward: response.user.ward
+      })
+      fetchData()
+    }
+  },[])
 
   return (
     <div className="isolate bg-white px-6 py-24 sm:py-14 lg:px-8">
@@ -114,7 +155,7 @@ const ProfileComponent = () => {
                   name="name"
                   type="text"
                   value={userData.name}
-                  onChange={handleChangeProfile}
+                  onChange={(e) => setUserData({...userData, name: e.target.value})}
                   className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>

@@ -33,7 +33,16 @@ export const postRequest = async (url, body) => {
 };
 
 export const getRequest = async (url) => {
-  const response = await fetch(url);
+  const token = localStorage.getItem('token');
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'auth-token-bearer': `Bearer ${token}`
+    }
+  });
+  console.log(response);
+  
 
   const data = await response.json();
 
