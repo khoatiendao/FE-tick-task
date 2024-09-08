@@ -24,9 +24,9 @@ export const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/verify/:tokenEmail" element={<Captcha />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
-        <Route path="/manage-profile" element={<Profile />}>
+        <Route path="/manage-profile" element={<Profile /> }>
           <Route index element={<Navigate to={"profile"} />} />
-          <Route path="/manage-profile/profile" element={<ProfileComponent />}/>
+          <Route path="/manage-profile/profile" element={<ProfileComponent /> }/>
           <Route path="/manage-profile/activity-history" element={<ActivityHistory />}/>
           <Route path="/manage-profile/setting" element={<Setting />} />
         </Route>

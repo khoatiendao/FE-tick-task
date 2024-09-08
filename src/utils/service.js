@@ -33,15 +33,16 @@ export const postRequest = async (url, body) => {
 };
 
 export const getRequest = async (url) => {
-  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('User');
+  const parseUser = JSON.parse(user)
+  
   const response = await fetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'auth-token-bearer': `Bearer ${token}`
+      'auth-token-bearer': `${parseUser.token}`
     }
   });
-  console.log(response);
   
 
   const data = await response.json();
@@ -56,7 +57,8 @@ export const getRequest = async (url) => {
     return { error: true, message };
   }
 
-  return data;
+  return {status: response.status ,data};
+  
 };
 
 export const getCountryApiRequest = async () => {
