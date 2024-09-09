@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
-const Avatar = ({ src }) => {
+const Avatar = () => {
+  const {userData} = useContext(AuthContext)
+  
   return (
     <div className="max-w-xl">
+      {userData ? 
       <img
         alt=""
-        src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        // src={userData.photo}
         className="inline-block h-20 w-20 rounded-full ring-2 ring-white"
-      />
+      /> : <p>Loading...</p>
+      }
     </div>
   );
 };

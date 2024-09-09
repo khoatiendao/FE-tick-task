@@ -61,51 +61,37 @@ export const AuthContextProvider = ({ children }) => {
     password: "",
   });
 
+  const [userData, setUserData] = useState(null)
+
   const getUserIdFromToken = () => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('User')
     if(!token) return null;
-    
     const decodedToken = jwtDecode(token)
-    console.log(decodedToken);
     return decodedToken._id
   }
-
-  const [userData, setUserData] = useState({
-    name: "",
-    gender: "",
-    phone: "",
-    country: "",
-    address: "",
-    city: "",
-    district: "",
-    ward: ""
-  })
 
   useEffect(() => {
     const fetchData = async() => {
       const _id = getUserIdFromToken();
       const response = await getRequest(`${baseUrlUser}/${_id}`)
-      console.log(response);
       
-
-      if(response.error) {
-        failed('Get user profile failed')
+      if(!response.status) {
+        throw new Error('Error fetching user data')
       }
-
-      const data = await response.json()
+      
       setUserData({
-        name: data.name,
-        gender: data.gender,
-        phone: data.phone,
-        country: data.country,
-        address: data.address,
-        city: data.city,
-        district: data.district,
-        ward: data.ward
+        name: response.data.user.name,
+        gender: response.data.user.gender,
+        phone: response.data.user.phone,
+        country: response.data.user.country,
+        address: response.data.user.address,
+        city: response.data.user.city,
+        district: response.data.user.district,
+        ward: response.data.user.ward,
+        photo: response.data.user.photo
       })
-      success('Get user profile success')
-      fetchData()
     }
+    fetchData()
   },[])
 
   const navigate = useNavigate();
@@ -199,7 +185,8 @@ export const AuthContextProvider = ({ children }) => {
         loginInfo,
         loginError,
         updateLoginInfo,
-        isLoginLoading
+        isLoginLoading,
+        userData
       }}
     >
       {children}
